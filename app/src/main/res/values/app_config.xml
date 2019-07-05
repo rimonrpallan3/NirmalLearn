@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- API Key  -->
+    <string name="api_key">928e74d2b60548c08e262214191804</string>
+
+    <string name="app_name">Sms Content</string>
+    <!--Set Your Application version -->
+    <string name="app_version">1.0</string>
+    <!-- BASE API URL (PLASE SET  LIKE THIS http://domain.com) -->
+    <string name="BASE_URL">http://api.apixu.com/v1/</string>
+
+    <!-- DEFAULT HOST -->
+    <string name="DEFAULT_HOST">www.apixu.com</string>
+
+
+    <!-- APP DESIGN -->
+    <!-- Set your theme color  -->
+    <item type="color" name="colorPrimary">#e3af12</item>
+    <item type="color" name="colorAccent">#fdd14c</item>
+    <item type="color" name="colorPrimaryDark">#000000</item>
+    <item type="color" name="colorPromo">#25323f</item>
+    <item type="color" name="iconColor">#fdd14c</item>
+    <item type="color" name="iconDisableColor">#c6c6c6</item>
+
+
+</resources>
