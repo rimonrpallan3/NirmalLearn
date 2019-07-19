@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.rimon.nirmaltest.AppController;
 import com.rimon.nirmaltest.R;
-import com.rimon.nirmaltest.SqlLiteTest.adapter.DBAdapter;
+
 import com.rimon.nirmaltest.SqlLiteTest.model.UserData;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class SqlLiteActivity extends AppCompatActivity {
 
         // Reading all contacts
         Log.d("Reading: ", "Reading all contacts..");
-        List<UserData> data = DBAdapter.getAllUserData();
+        List<UserData> data = AppController.getAllUserData();
 
         for (UserData dt : data) {
             String log = "Id: "+dt.getId()+" ,Name: " + dt.getName() + " ,Phone: " + dt.getEmail();

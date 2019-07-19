@@ -1,3 +1,4 @@
+/*
 package com.rimon.nirmaltest.SqlLiteTest.adapter;
 
 import android.content.ContentValues;
@@ -16,13 +17,19 @@ import java.util.List;
 
 public class DBAdapter {
 
-    /******** if debug is set true then it will show all Logcat message *******/
+    */
+/******** if debug is set true then it will show all Logcat message *******//*
+
     public static final boolean DEBUG = true;
 
-    /******************** Logcat TAG ************/
+    */
+/******************** Logcat TAG ************//*
+
     public static final String LOG_TAG = "DBAdapter";
 
-    /******************** Table Fields ************/
+    */
+/******************** Table Fields ************//*
+
     public static final String KEY_ID = "id";
 
     public static final String KEY_USER_NAME = "user_name";
@@ -30,30 +37,44 @@ public class DBAdapter {
     public static final String KEY_USER_EMAIL = "user_email";
 
 
-    /******************** Database Name ************/
+    */
+/******************** Database Name ************//*
+
     public static final String DATABASE_NAME = "DB_sqllite";
 
-    /**** Database Version (Increase one if want to also upgrade your database) ***/
+    */
+/**** Database Version (Increase one if want to also upgrade your database) ***//*
+
     public static final int DATABASE_VERSION = 1;// started at 1
 
-    /** Table names */
+    */
+/** Table names *//*
+
     public static final String USER_TABLE = "tbl_user";
 
-    /******* Set all table with comma seperated like USER_TABLE,ABC_TABLE *******/
+    */
+/******* Set all table with comma seperated like USER_TABLE,ABC_TABLE *******//*
+
     private static final String[ ] ALL_TABLES = { USER_TABLE };
 
-    /** Create table syntax */
+    */
+/** Create table syntax *//*
+
     private static final String USER_CREATE =
             "create table tbl_user( _id integer primary key autoincrement," +
                     "user_name text not null," +
                     "user_email text not null);";
 
-    /******************** Used to open database in syncronized way ************/
+    */
+/******************** Used to open database in syncronized way ************//*
+
     private static DataBaseHelper DBHelper = null;
 
     protected DBAdapter() {
     }
-    /*********** Initialize database *************/
+    */
+/*********** Initialize database *************//*
+
     public static void init(Context context) {
         if (DBHelper == null) {
             if (DEBUG)
@@ -62,7 +83,9 @@ public class DBAdapter {
         }
     }
 
-    /********** Main Database creation INNER class ********/
+    */
+/********** Main Database creation INNER class ********//*
+
     private static class DataBaseHelper extends SQLiteOpenHelper {
 
         public DataBaseHelper(Context context) {
@@ -98,16 +121,22 @@ public class DBAdapter {
     } // Inner class closed
 
 
-    /***** Open database for insert,update,delete in syncronized manner *****/
+    */
+/***** Open database for insert,update,delete in syncronized manner *****//*
+
     private static synchronized SQLiteDatabase open() throws SQLException {
         return DBHelper.getWritableDatabase();
     }
 
 
-    /****************** General functions*******************/
+    */
+/****************** General functions*******************//*
 
 
-    /********** Escape string for single quotes (Insert,Update) *******/
+
+    */
+/********** Escape string for single quotes (Insert,Update) *******//*
+
     private static String sqlEscapeString(String aString) {
         String aReturn = "";
 
@@ -122,7 +151,10 @@ public class DBAdapter {
     }
 
 
-    /********* UnEscape string for single quotes (show data) *******/
+    */
+/********* UnEscape string for single quotes (show data) *******//*
+
+*/
 /*
     private static String sqlUnEscapeString(String aString) {
 
@@ -134,9 +166,12 @@ public class DBAdapter {
 
         return aReturn;
     }
-*/
+*//*
 
-    /********* User data functons *********/
+
+    */
+/********* User data functons *********//*
+
 
     public static void addUserData(UserData uData) {
 
@@ -244,6 +279,9 @@ public class DBAdapter {
     }
 
 
-    /********************************************************************/
+    */
+/********************************************************************//*
+
 
 }
+*/

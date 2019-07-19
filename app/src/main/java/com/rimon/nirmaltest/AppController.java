@@ -26,7 +26,6 @@ public class AppController extends Application {
     // Overriding this method is totally optional!
     public static Activity mActivity;
     private static AppController mInstance;
-    private static Context context;
 
     /******** if debug is set true then it will show all Logcat message *******/
     public static final boolean DEBUG = true;
@@ -70,13 +69,13 @@ public class AppController extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        appInit(this);
         // Required initialization logic here!
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
                 //mNetworkReceiver = new MyNetworkReceiver();
-                context = activity.getApplicationContext();
+
             }
 
             @Override
@@ -112,7 +111,7 @@ public class AppController extends Application {
                 // unregisterReceiver(mNetworkReceiver);
             }
         });
-        appInit();
+
     }
 
     private void parseAppConfig() {
@@ -121,11 +120,14 @@ public class AppController extends Application {
         AppConfig.API_KEY = getResources().getString(R.string.api_key);
     }
 
-    private void appInit() {
+
+
+
+    private void appInit(Context context) {
         mInstance = this;
         if (DBHelper == null) {
             if (DEBUG)
-                //Log.i("DBAdapter", context.toString());
+                Log.i("DBAdapter", context.toString());
             DBHelper = new AppController.DataBaseHelper(context);
         }
         parseAppConfig();
