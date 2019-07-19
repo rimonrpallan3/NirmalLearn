@@ -1,9 +1,11 @@
 package com.rimon.nirmaltest.landing;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,7 +29,11 @@ import com.rimon.nirmaltest.landing.view.IMainView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IMainActivity extends AppCompatActivity implements IMainView {
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
+
+public class IMainActivity extends AppCompatActivity implements IMainView,EasyPermissions.PermissionCallbacks {
 
     IMainPresenter iMainPresenter;
     Button btnSubmit;
@@ -43,6 +49,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
     List<Sms> smsArrayList = new ArrayList<>();
     RecyclerView rvSmsList;
     SmsAdapter smsAdapter;
+    private static final int RC_READ_SMS = 123;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +63,57 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                address = etPhoneNo.getText().toString();
-                smsArrayList = getSingleUserSms(address);
-                smsAdapter = new SmsAdapter(smsArrayList);
-                LinearLayoutManager linearLayoutManager;
-                linearLayoutManager = new LinearLayoutManager(getParent(), RecyclerView.VERTICAL, false);
-                rvSmsList.setLayoutManager(linearLayoutManager);
-                rvSmsList.setAdapter(smsAdapter);
+
+                cameraTask();
 
             }
         });
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            final String myPackageName = getPackageName();
-            if (!Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
 
-                Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-                intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, myPackageName);
-                startActivityForResult(intent, 1);
+    }
+
+    private boolean hasSMSReadPermission() {
+        return EasyPermissions.hasPermissions(this, Manifest.permission.READ_SMS);
+    }
+
+    @AfterPermissionGranted(RC_READ_SMS)
+    public void cameraTask() {
+        if (hasSMSReadPermission()) {
+            // Have permission, do the thing!
+
+            address = etPhoneNo.getText().toString();
+            smsArrayList = getSingleUserSms(address);
+           /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                final String myPackageName = getPackageName();
+                   if (  !Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
+
+                    Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
+                    intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, myPackageName);
+                    startActivityForResult(intent, 1);
+                }else {
+                    smsArrayList = getSingleUserSms(address);                }
             }else {
-                List<Sms> lst = getAllSms();
+                smsArrayList = getSingleUserSms(address);
             }
-        }else {
-            List<Sms> lst = getAllSms();
+*/
+
+            smsAdapter = new SmsAdapter(smsArrayList);
+            LinearLayoutManager linearLayoutManager;
+            linearLayoutManager = new LinearLayoutManager(getParent(), RecyclerView.VERTICAL, false);
+            rvSmsList.setLayoutManager(linearLayoutManager);
+            rvSmsList.setAdapter(smsAdapter);
+            Toast.makeText(this, "TODO: Has SMS Read Permission", Toast.LENGTH_LONG).show();
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(
+                    this,
+                    getString(R.string.rationale_camera),
+                    RC_READ_SMS,
+                    Manifest.permission.READ_SMS);
         }
     }
+
 
     public List<Sms> getSingleUserSms(String phNo){
         List<Sms> smsList = new ArrayList<>();
@@ -158,6 +190,15 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
     }
 
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
     public List<Sms> getAllSms() {
         List<Sms> lstSms = new ArrayList<Sms>();
         Sms objSms = new Sms();
@@ -204,6 +245,18 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            String yes = getString(R.string.yes);
+            String no = getString(R.string.no);
+
+            // Do something after user returned from app settings screen, like showing a Toast.
+            Toast.makeText(
+                    this, "Please enable Sms Read Permission manually ",
+                    Toast.LENGTH_LONG)
+                    .show();
+        }
+
+
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
 
@@ -211,7 +264,13 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
                     final String myPackageName = getPackageName();
                     if (Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
 
-                        List<Sms> lst = getAllSms();
+                        smsArrayList = getSingleUserSms(address);
+                        smsAdapter = new SmsAdapter(smsArrayList);
+                        LinearLayoutManager linearLayoutManager;
+                        linearLayoutManager = new LinearLayoutManager(getParent(), RecyclerView.VERTICAL, false);
+                        rvSmsList.setLayoutManager(linearLayoutManager);
+                        rvSmsList.setAdapter(smsAdapter);
+                        Toast.makeText(this, "TODO: Has SMS Read Permission", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -219,4 +278,13 @@ public class IMainActivity extends AppCompatActivity implements IMainView {
     }
 
 
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
+    }
 }
