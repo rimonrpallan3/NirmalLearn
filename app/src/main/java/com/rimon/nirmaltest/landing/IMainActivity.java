@@ -16,10 +16,12 @@ import android.provider.Telephony;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rimon.nirmaltest.R;
+import com.rimon.nirmaltest.appconfig.Constances;
 import com.rimon.nirmaltest.landing.adapter.SmsAdapter;
 import com.rimon.nirmaltest.landing.model.Sms;
 import com.rimon.nirmaltest.landing.presenter.IMainPresenter;
@@ -38,14 +40,12 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
     IMainPresenter iMainPresenter;
     Button btnSubmit;
     EditText etPhoneNo;
+    LinearLayout llEmptyView;
     String address = "";
     String msg_id = "";
     String thread_id = "";
-    String address_b = "";
     String date = "";
-    String msg_body = "";
     String type = "";
-    Sms objSms;
     List<Sms> smsArrayList = new ArrayList<>();
     RecyclerView rvSmsList;
     SmsAdapter smsAdapter;
@@ -58,19 +58,17 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
         btnSubmit = findViewById(R.id.btnSubmit);
         etPhoneNo = findViewById(R.id.etPhoneNo);
         rvSmsList = findViewById(R.id.rvSmsList);
+        rvSmsList = findViewById(R.id.rvSmsList);
+        llEmptyView = findViewById(R.id.llEmptyView);
         iMainPresenter = new MainPresenter(this);
         iMainPresenter.fetchData();
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                cameraTask();
-
-            }
-        });
+        getSMSTask();
 
 
 
+    }
+    public void btnRetry(View v){
+        getSMSTask();
     }
 
     private boolean hasSMSReadPermission() {
@@ -78,12 +76,12 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
     }
 
     @AfterPermissionGranted(RC_READ_SMS)
-    public void cameraTask() {
+    public void getSMSTask() {
         if (hasSMSReadPermission()) {
             // Have permission, do the thing!
 
             address = etPhoneNo.getText().toString();
-            smsArrayList = getSingleUserSms(address);
+            smsArrayList = getAllSms();
            /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 final String myPackageName = getPackageName();
                    if (  !Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
@@ -103,6 +101,10 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
             linearLayoutManager = new LinearLayoutManager(getParent(), RecyclerView.VERTICAL, false);
             rvSmsList.setLayoutManager(linearLayoutManager);
             rvSmsList.setAdapter(smsAdapter);
+            if (smsAdapter.getItemCount() == 0){
+                llEmptyView.setVisibility(View.VISIBLE);
+                rvSmsList.setVisibility(View.GONE);
+            }
             Toast.makeText(this, "TODO: Has SMS Read Permission", Toast.LENGTH_LONG).show();
         } else {
             // Ask for one permission
@@ -182,7 +184,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("Exception : "+e.getMessage());
-            Toast.makeText(getApplicationContext(),"Please input Right No :",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"Please give permission and input Right No :",Toast.LENGTH_LONG).show();
         }
 
 
@@ -200,6 +202,8 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
 
 
     public List<Sms> getAllSms() {
+        llEmptyView.setVisibility(View.GONE);
+        rvSmsList.setVisibility(View.VISIBLE);
         List<Sms> lstSms = new ArrayList<Sms>();
         Sms objSms = new Sms();
         Uri message = Uri.parse("content://sms/");
@@ -209,6 +213,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
         startManagingCursor(c);
         int totalSMS = c.getCount();
 
+        System.out.println("totalSMS : "+totalSMS);
         if (c.moveToFirst()) {
             for (int i = 0; i < totalSMS; i++) {
 
@@ -228,6 +233,13 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
                 lstSms.add(objSms);
                 c.moveToNext();
             }
+        }else {
+            llEmptyView.setVisibility(View.VISIBLE);
+            rvSmsList.setVisibility(View.GONE);
+            Toast.makeText(
+                    this, "Their is no Message to read",
+                    Toast.LENGTH_LONG)
+                    .show();
         }
         // else {
         // throw new RuntimeException("You have no SMS");
@@ -285,6 +297,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
+        llEmptyView.setVisibility(View.VISIBLE);
+        rvSmsList.setVisibility(View.GONE);
     }
 }

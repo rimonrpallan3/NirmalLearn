@@ -11,22 +11,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_margin="10dp"
         android:gravity="center"
-        android:layout_margin="10dp">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/etPhoneNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:hint=" Please input SMS Heading : "/>
+            android:hint=" Please input SMS Heading : " />
 
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit"/>
+            android:text="Submit" />
 
 
     </LinearLayout>
@@ -36,20 +37,49 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardElevation="4dp"
-        app:contentPadding="5dp"
-        app:cardBackgroundColor="@color/colorPrimary">
+        app:contentPadding="5dp">
 
     </androidx.cardview.widget.CardView>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSmsList"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
     </androidx.recyclerview.widget.RecyclerView>
 
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/llEmptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvEmptyTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:text="No Promotion Message Available"
+            />
+
+        <Button
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btnRetry"
+            android:text="Retry" />
+
+    </LinearLayout>
 
 </LinearLayout>

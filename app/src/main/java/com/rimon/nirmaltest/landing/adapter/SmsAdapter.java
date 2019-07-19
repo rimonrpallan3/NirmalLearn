@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.rimon.nirmaltest.R;
+import com.rimon.nirmaltest.appconfig.Constances;
 import com.rimon.nirmaltest.landing.model.Sms;
 
 import java.util.ArrayList;
@@ -35,8 +36,19 @@ public class SmsAdapter extends RecyclerView.Adapter<SmsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull SmsAdapter.ViewHolder holder, int position) {
         Sms sms = smsArrayList.get(position);
-        holder.tvBody.setText(sms.getMsg());
-        holder.tvHeading.setText(sms.getFolderName()+" : ");
+        if(Constances.isValidPhoneNumber(sms.getAddress())){
+            System.out.println("Yes this is a valid no ");
+        }else {
+            if(sms.getMsg().contains("OTP")){
+
+            }else {
+                holder.tvBody.setText(sms.getMsg());
+                holder.tvHeading.setText(sms.getAddress()+" : ");
+            }
+
+        }
+
+
     }
 
     @Override

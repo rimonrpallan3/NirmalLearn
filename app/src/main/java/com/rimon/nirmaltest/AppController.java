@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.rimon.nirmaltest.SqlLiteTest.adapter.DBAdapter;
 import com.rimon.nirmaltest.SqlLiteTest.model.UserData;
 import com.rimon.nirmaltest.appconfig.AppConfig;
 
