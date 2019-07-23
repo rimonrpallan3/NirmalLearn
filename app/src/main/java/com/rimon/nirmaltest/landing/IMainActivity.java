@@ -47,6 +47,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
     String date = "";
     String type = "";
     List<Sms> smsArrayList = new ArrayList<>();
+    List<Sms> smsDeleatedArrayList = new ArrayList<>();
     RecyclerView rvSmsList;
     SmsAdapter smsAdapter;
     private static final int RC_READ_SMS = 123;
@@ -82,6 +83,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
 
             address = etPhoneNo.getText().toString();
             smsArrayList = getAllSms();
+            smsDeleatedArrayList = getFilteredList(smsArrayList);
            /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 final String myPackageName = getPackageName();
                    if (  !Telephony.Sms.getDefaultSmsPackage(this).equals(myPackageName)) {
@@ -96,7 +98,7 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
             }
 */
 
-            smsAdapter = new SmsAdapter(smsArrayList);
+            smsAdapter = new SmsAdapter(smsDeleatedArrayList);
             LinearLayoutManager linearLayoutManager;
             linearLayoutManager = new LinearLayoutManager(getParent(), RecyclerView.VERTICAL, false);
             rvSmsList.setLayoutManager(linearLayoutManager);
@@ -114,6 +116,25 @@ public class IMainActivity extends AppCompatActivity implements IMainView,EasyPe
                     RC_READ_SMS,
                     Manifest.permission.READ_SMS);
         }
+    }
+
+    public List<Sms> getFilteredList(List<Sms> smsArrayList){
+
+        for(int i=0;i<smsArrayList.size();i++){
+            Sms sms = smsArrayList.get(i);
+            if(Constances.isValidPhoneNumber(sms.getAddress())){
+                System.out.println("Yes this is a valid no ");
+
+            }else {
+                if(sms.getMsg().contains("OTP")){
+                    //hideItem(position);
+                }else {
+                    smsDeleatedArrayList.add(sms);
+                }
+
+            }
+        }
+        return smsDeleatedArrayList;
     }
 
 
